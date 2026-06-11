@@ -1,0 +1,7 @@
+# mediapipe 0.10.3x 移除了 legacy solutions API（tracker.py 依赖），且 0.10.21 要求 numpy<2，
+# 故两者均精确锁定。升级 mediapipe 需先把 tracker.py 迁移到 tasks API（HandLandmarker）。
+mediapipe==0.10.21
+opencv-python==4.11.0.86
+pyobjc-framework-Quartz>=10
+pyobjc-framework-ApplicationServices>=10
+pytest>=8
