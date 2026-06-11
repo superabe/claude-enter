@@ -28,6 +28,8 @@ def classify_pose(landmarks):
     伸直/卷曲用「指尖到手腕距离 vs PIP 到手腕距离」判断，带 10% 滞回带，
     避免临界角度抖动。拇指不参与判断（对镜头角度太敏感）。
     """
+    if len(landmarks) < 21:
+        raise ValueError(f"Expected 21 landmarks, got {len(landmarks)}")
     wrist = landmarks[WRIST]
     extended = 0
     curled = 0
@@ -46,6 +48,9 @@ def classify_pose(landmarks):
 
 
 def palm_center(landmarks):
+    """掌心位置：手腕与四指 MCP 共 5 点的均值，返回归一化 (x, y)。"""
+    if len(landmarks) < 21:
+        raise ValueError(f"Expected 21 landmarks, got {len(landmarks)}")
     xs = [landmarks[i][0] for i in PALM_POINTS]
     ys = [landmarks[i][1] for i in PALM_POINTS]
     return (sum(xs) / len(xs), sum(ys) / len(ys))

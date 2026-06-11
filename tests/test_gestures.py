@@ -8,7 +8,7 @@ def make_landmarks(extended_fingers):
 
     手指编号 0-3 = 食指/中指/无名指/小指（不含拇指）。
     """
-    pts = [(0.5, 0.7)] * 21
+    pts = [(0.5, 0.7) for _ in range(21)]
     pts[0] = (0.5, 0.9)  # wrist
     pips = (6, 10, 14, 18)
     tips = (8, 12, 16, 20)
@@ -35,7 +35,7 @@ def test_partial_hand_is_other():
 
 
 def test_palm_center_is_mean_of_palm_points():
-    pts = [(0.0, 0.0)] * 21
+    pts = [(0.0, 0.0) for _ in range(21)]
     for i in (0, 5, 9, 13, 17):
         pts[i] = (0.5, 0.4)
     center = palm_center(pts)
