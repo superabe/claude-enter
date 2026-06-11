@@ -33,9 +33,12 @@ class HandTracker:
 
     def draw(self, bgr_frame, hand: HandResult):
         """在帧上画关键点骨架（预览窗用）。"""
+        if hand is None:
+            return
         mp.solutions.drawing_utils.draw_landmarks(
             bgr_frame, hand.raw_landmarks, mp.solutions.hands.HAND_CONNECTIONS
         )
 
     def close(self):
+        """释放 TFLite 运行时；长驻进程务必在 finally 中调用。"""
         self._hands.close()
