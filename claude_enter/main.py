@@ -48,12 +48,12 @@ def main(argv=None):
         ControllerConfig(unlock_hold_sec=args.unlock_hold, fist_hold_sec=args.fist_hold),
         swipe_detector=swipe,
     )
-    tracker = HandTracker()
     try:
         camera = Camera(args.camera)
     except CameraError as e:
         print(str(e), file=sys.stderr)
         return 1
+    tracker = HandTracker()
 
     last_gesture = "-"
     fps = 0.0
@@ -106,6 +106,9 @@ def main(argv=None):
                     break
     except KeyboardInterrupt:
         pass
+    except CameraError as e:
+        print(f"\n摄像头错误：{e}", file=sys.stderr)
+        return 1
     finally:
         print()
         camera.release()
