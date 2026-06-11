@@ -86,7 +86,10 @@ class SwipeDetector:
         self._samples.clear()
 
     def update(self, t, x, y):
-        """喂入一帧掌心位置，返回 'up'/'down'/'left'/'right' 或 None。"""
+        """喂入一帧掌心位置，返回 'up'/'down'/'left'/'right' 或 None。
+
+        t 必须单调不减（用 time.monotonic()）。
+        """
         cfg = self.cfg
         self._samples.append((t, x, y))
         while self._samples and t - self._samples[0][0] > cfg.window_sec:
@@ -101,7 +104,7 @@ class SwipeDetector:
 
         if len(self._samples) < 2:
             return None
-        t0, x0, y0 = self._samples[0]
+        _, x0, y0 = self._samples[0]
         dx, dy = x - x0, y - y0
         direction = None
         if abs(dx) >= cfg.min_disp and abs(dx) >= cfg.axis_ratio * abs(dy):

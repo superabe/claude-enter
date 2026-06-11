@@ -67,6 +67,7 @@ def feed_motion(det, t0, start, end, duration):
 
 
 def feed_still(det, t0, pos, duration):
+    """以 30fps 原地喂帧 duration 秒（int 截断，帧数=int(duration/DT)）。"""
     steps = int(duration / DT)
     t = t0
     for i in range(1, steps + 1):
@@ -124,3 +125,22 @@ def test_return_stroke_suppressed_then_rearms():
     # 再次向左挥 → 触发 left
     fired, t = feed_motion(det, t, (0.8, 0.5), (0.4, 0.5), 0.3)
     assert fired == "left"
+
+
+def test_reset_clears_trajectory_while_armed():
+    det = SwipeDetector()
+    # 累积接近阈值的位移后 reset，位移应从下一帧重新计算
+    det.update(0.0, 0.8, 0.5)
+    det.update(0.2, 0.56, 0.5)
+    det.reset()
+    assert det.update(0.3, 0.55, 0.5) is None
+
+
+def test_reset_preserves_cooldown():
+    det = SwipeDetector()
+    fired, t = feed_motion(det, 0.0, (0.8, 0.5), (0.4, 0.5), 0.3)
+    assert fired == "left"
+    det.reset()
+    # reset 不应绕过冷却：紧接着的快速挥动不触发
+    fired, _ = feed_motion(det, t + 0.05, (0.8, 0.5), (0.4, 0.5), 0.3)
+    assert fired is None
