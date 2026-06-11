@@ -14,6 +14,7 @@
 ```bash
 python3.12 -m venv .venv
 .venv/bin/pip install -r requirements.txt
+.venv/bin/pip install -e .   # 生成 claude-enter 命令，任意目录可用
 ```
 
 核心识别依赖（mediapipe、opencv-python）是精确锁定的——mediapipe 0.10.3x 移除了本项目使用的 legacy solutions API，不要随意升级。
@@ -26,7 +27,7 @@ python3.12 -m venv .venv
 ## 使用
 
 ```bash
-.venv/bin/python -m claude_enter
+.venv/bin/claude-enter            # 任意目录可用；项目目录内也可用 .venv/bin/python -m claude_enter
 ```
 
 启动后**点击聚焦运行 Claude Code 的终端窗口**（按键发给当前聚焦窗口；预览窗启动时会抢走焦点，记得点回终端）。
