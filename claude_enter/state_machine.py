@@ -87,6 +87,8 @@ class Controller:
         if self._last_hand_t is not None and t - self._last_hand_t >= self.cfg.hand_lost_sec:
             self.state = State.LOCKED
             self._unlock_timer.reset()
+            self._fist_timer.reset()
+            self.swipe.reset()
             events.append(("locked",))
             return events
 

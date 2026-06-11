@@ -1,7 +1,6 @@
 from claude_enter.gestures import HandPose
 from claude_enter.state_machine import (
     Controller,
-    ControllerConfig,
     HandObservation,
     State,
 )
@@ -119,3 +118,20 @@ def test_locked_ignores_fist_and_swipe():
     events, _ = run_frames(ctrl, 0.0, 0.5, fist)
     assert events == []
     assert stub.update_calls == 0
+
+
+def test_relock_and_reunlock_cycle():
+    ctrl, _, t = unlocked_controller()
+    # 触发一次握拳回车，弄脏 fist timer 状态
+    _, t = run_frames(ctrl, t, 0.6, fist)
+    # 手离开 → 回锁
+    events, t = run_frames(ctrl, t, 3.2, lambda: None)
+    assert ("locked",) in events
+    assert ctrl.state == State.LOCKED
+    # 第二次解锁
+    events, t = run_frames(ctrl, t, 1.2, palm)
+    assert events.count(("unlocked",)) == 1
+    assert ctrl.state == State.ACTIVE
+    # 第二次握拳回车恰好触发一次
+    events, _ = run_frames(ctrl, t, 0.6, fist)
+    assert events.count(("key", "enter")) == 1
