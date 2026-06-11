@@ -16,7 +16,7 @@ python3.12 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 ```
 
-依赖版本是精确锁定的（mediapipe 0.10.3x 移除了本项目使用的 legacy solutions API），不要随意升级。
+核心识别依赖（mediapipe、opencv-python）是精确锁定的——mediapipe 0.10.3x 移除了本项目使用的 legacy solutions API，不要随意升级。
 
 ## 权限（首次运行前）
 
